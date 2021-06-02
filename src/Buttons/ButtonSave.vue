@@ -20,12 +20,12 @@ export default {
   props: {
     running: {
       type: Boolean,
-      required: true
+      required: true,
     },
     texte: {
       type: String,
-      default: "Enregistrer"
-    }
+      default: "Enregistrer",
+    },
   },
   components: {
     //
@@ -47,8 +47,8 @@ export default {
   methods: {
     onSubmit() {
       this.$emit("ev-click");
-    }
-  }
+    },
+  },
 };
 </script>
 

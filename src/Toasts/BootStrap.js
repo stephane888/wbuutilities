@@ -1,56 +1,58 @@
 import Vue from "vue";
 import ajax from "../Ajax/basic";
-import { ToastPlugin } from "bootstrap-vue";
-Vue.use(ToastPlugin);
+import { BVToastPlugin } from "bootstrap-vue";
+Vue.use(BVToastPlugin);
+
 const vm = new Vue();
+//console.log("Module Vue :  ", vm, "\n $bvToast : ", vm.$bvToast);
 
 const AjaxToastBootStrap = {
   ...ajax,
-  $bvModal: vm.$bvModal,
+  //$bvModal: vm.$bvModal,
   $bvToast: vm.$bvToast,
-  notification: function(ajaxTitle, variant = "success") {
+  notification: function (ajaxTitle, variant = "success") {
     this.$bvToast.toast(" ", {
       title: ajaxTitle,
       variant: variant,
       solid: true,
-      toaster: "b-toaster-top-right"
+      toaster: "b-toaster-top-right",
     });
   },
-  post: function(url, datas, configs, showNotification = true) {
+  post: function (url, datas, configs, showNotification = true) {
     return new Promise((resolv, reject) => {
       ajax
         .post(url, datas, configs)
-        .then(reponse => {
+        .then((reponse) => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch(error => {
+        .catch((error) => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
         });
     });
   },
-  get: function(url, configs, showNotification = false) {
+  get: function (url, configs, showNotification = false) {
     return new Promise((resolv, reject) => {
       ajax
         .post(url, configs)
-        .then(reponse => {
+        .then((reponse) => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch(error => {
+        .catch((error) => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
         });
     });
   },
-  GetErrorTitle: function(error) {
+  GetErrorTitle: function (error) {
     var title;
     //
     if (error.code) {
@@ -70,7 +72,7 @@ const AjaxToastBootStrap = {
       title = decodeURI(error.error.statusText);
     }
     return title;
-  }
+  },
 };
 /**
  * Intercept la reponse ajax pour declenche le toast adapter.

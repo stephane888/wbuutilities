@@ -20,12 +20,12 @@ export default {
   props: {
     running: {
       type: Boolean,
-      required: true
+      required: true,
     },
     texte: {
       type: String,
-      default: "Supprimer"
-    }
+      default: "Supprimer",
+    },
   },
   components: {
     //
@@ -47,8 +47,8 @@ export default {
   methods: {
     DeleteFile() {
       this.$emit("ev-click");
-    }
-  }
+    },
+  },
 };
 </script>
 

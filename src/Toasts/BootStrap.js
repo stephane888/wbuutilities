@@ -1,6 +1,6 @@
 import Vue from "vue";
 import ajax from "../Ajax/basic";
-import { BVToastPlugin } from "bootstrap-vue";
+import {BVToastPlugin} from "bootstrap-vue";
 Vue.use(BVToastPlugin);
 
 const vm = new Vue();
@@ -10,49 +10,99 @@ const AjaxToastBootStrap = {
   ...ajax,
   //$bvModal: vm.$bvModal,
   $bvToast: vm.$bvToast,
-  notification: function (ajaxTitle, variant = "success") {
+  $bvModal: vm.$bvModal,
+  modalMessage(body, conf) {
+    const confDefault = {
+      size: "md",
+      buttonSize: "sm",
+      hideFooter: true,
+      centered: conf.centered !== undefined ? conf.centered : true
+    };
+    for (const i in conf) {
+      confDefault[i] = conf[i];
+    }
+    return new Promise((resolv, reject) => {
+      this.$bvModal
+        .msgBoxConfirm(body, confDefault)
+        .then(value => {
+          resolv(value);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  },
+  modalConfirmDelete(
+    body = "Confirmer la suppression, NB : cette action est irreverssible.",
+    conf = {
+      title: "Attention",
+      okVariant: "danger",
+      okTitle: "Supprimer",
+      cancelTitle: "Annuler",
+      footerClass: "p-2",
+      hideHeaderClose: false,
+      centered: true,
+      hideFooter: true
+    }
+  ) {
+    return this.modalMessage(body, conf);
+  },
+  modalSuccess(body = "", conf = {}) {
+    const confDefault = {
+      title: "Succes",
+      headerBgVariant: "success",
+      bodyClass: ["p-3"],
+      hideFooter: true,
+      headerTextVariant: "light"
+    };
+    for (const i in conf) {
+      confDefault[i] = conf[i];
+    }
+    return this.modalMessage(body, confDefault);
+  },
+  notification: function(ajaxTitle, variant = "success") {
     this.$bvToast.toast(" ", {
       title: ajaxTitle,
       variant: variant,
       solid: true,
-      toaster: "b-toaster-top-right",
+      toaster: "b-toaster-top-right"
     });
   },
-  post: function (url, datas, configs, showNotification = true) {
+  post: function(url, datas, configs, showNotification = true) {
     return new Promise((resolv, reject) => {
       ajax
         .post(url, datas, configs)
-        .then((reponse) => {
+        .then(reponse => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
         });
     });
   },
-  get: function (url, configs, showNotification = false) {
+  get: function(url, configs, showNotification = false) {
     return new Promise((resolv, reject) => {
       ajax
         .post(url, configs)
-        .then((reponse) => {
+        .then(reponse => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
         });
     });
   },
-  GetErrorTitle: function (error) {
+  GetErrorTitle: function(error) {
     var title;
     //
     if (error.code) {
@@ -72,7 +122,7 @@ const AjaxToastBootStrap = {
       title = decodeURI(error.error.statusText);
     }
     return title;
-  },
+  }
 };
 /**
  * Intercept la reponse ajax pour declenche le toast adapter.

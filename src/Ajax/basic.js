@@ -4,7 +4,7 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 5000
+  timeout: 15000
 });
 
 const basicRequest = {

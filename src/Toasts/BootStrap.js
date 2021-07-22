@@ -16,12 +16,13 @@ const AjaxToastBootStrap = {
       size: "md",
       buttonSize: "sm",
       hideFooter: true,
-      centered: conf.centered !== undefined ? conf.centered : true
+      centered: true
     };
     for (const i in conf) {
       confDefault[i] = conf[i];
     }
     return new Promise((resolv, reject) => {
+      console.log("confDefault : ", confDefault);
       this.$bvModal
         .msgBoxConfirm(body, confDefault)
         .then(value => {
@@ -39,10 +40,7 @@ const AjaxToastBootStrap = {
       okVariant: "danger",
       okTitle: "Supprimer",
       cancelTitle: "Annuler",
-      footerClass: "p-2",
-      hideHeaderClose: false,
-      centered: true,
-      hideFooter: true
+      footerClass: "p-2"
     }
   ) {
     return this.modalMessage(body, conf);
@@ -88,7 +86,7 @@ const AjaxToastBootStrap = {
   get: function(url, configs, showNotification = false) {
     return new Promise((resolv, reject) => {
       ajax
-        .post(url, configs)
+        .get(url, configs)
         .then(reponse => {
           if (showNotification) {
             this.notification("success");

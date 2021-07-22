@@ -4,7 +4,7 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 15000
+  timeout: 300000,
 });
 
 const basicRequest = {
@@ -12,15 +12,15 @@ const basicRequest = {
   post: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
       InstAxios.post(url, datas, configs)
-        .then(reponse => {
-          resolv({status: true, data: reponse.data, reponse: reponse});
+        .then((reponse) => {
+          resolv({ status: true, data: reponse.data, reponse: reponse });
         })
-        .catch(error => {
+        .catch((error) => {
           reject({
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
           });
         });
     });
@@ -28,15 +28,15 @@ const basicRequest = {
   get: function(url, configs) {
     return new Promise((resolv, reject) => {
       InstAxios.get(url, configs)
-        .then(reponse => {
-          resolv({status: true, data: reponse.data, reponse: reponse});
+        .then((reponse) => {
+          resolv({ status: true, data: reponse.data, reponse: reponse });
         })
-        .catch(error => {
+        .catch((error) => {
           reject({
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
           });
         });
     });
@@ -46,7 +46,7 @@ const basicRequest = {
    */
   postFile(url, file, id = null) {
     return new Promise((resolv, reject) => {
-      this.getBase64(file).then(fileEncode => {
+      this.getBase64(file).then((fileEncode) => {
         var headers = new Headers();
         console.log("headers : ", headers);
         var fileCompose = file.name.split(".");
@@ -58,9 +58,9 @@ const basicRequest = {
             upload: fileEncode.base64,
             filename: fileCompose[0],
             ext: fileCompose[1],
-            id: id
+            id: id,
           }),
-          cache: "default"
+          cache: "default",
         };
         fetch(url, myInit).then(function(response) {
           response
@@ -68,7 +68,7 @@ const basicRequest = {
             .then(function(json) {
               resolv(json);
             })
-            .catch(error => {
+            .catch((error) => {
               reject(error);
             });
         });
@@ -82,11 +82,11 @@ const basicRequest = {
       //reader.onload = () => resolve(reader.result);
       reader.onloadend = () => {
         var fileArray = reader.result.split(",");
-        resolve({src: reader.result, base64: fileArray[1]});
+        resolve({ src: reader.result, base64: fileArray[1] });
       };
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
-  }
+  },
 };
 
 export default basicRequest;

@@ -1,14 +1,11 @@
 import Vue from "vue";
 import ajax from "../Ajax/basic";
-import {BVToastPlugin} from "bootstrap-vue";
+import { BVToastPlugin, ModalPlugin } from "bootstrap-vue";
 Vue.use(BVToastPlugin);
-
+Vue.use(ModalPlugin);
 const vm = new Vue();
-//console.log("Module Vue :  ", vm, "\n $bvToast : ", vm.$bvToast);
-
 const AjaxToastBootStrap = {
   ...ajax,
-  //$bvModal: vm.$bvModal,
   $bvToast: vm.$bvToast,
   $bvModal: vm.$bvModal,
   modalMessage(body, conf) {
@@ -16,7 +13,7 @@ const AjaxToastBootStrap = {
       size: "md",
       buttonSize: "sm",
       hideFooter: true,
-      centered: true
+      centered: true,
     };
     for (const i in conf) {
       confDefault[i] = conf[i];
@@ -25,10 +22,10 @@ const AjaxToastBootStrap = {
       console.log("confDefault : ", confDefault);
       this.$bvModal
         .msgBoxConfirm(body, confDefault)
-        .then(value => {
+        .then((value) => {
           resolv(value);
         })
-        .catch(err => {
+        .catch((err) => {
           reject(err);
         });
     });
@@ -40,7 +37,7 @@ const AjaxToastBootStrap = {
       okVariant: "danger",
       okTitle: "Supprimer",
       cancelTitle: "Annuler",
-      footerClass: "p-2"
+      footerClass: "p-2",
     }
   ) {
     return this.modalMessage(body, conf);
@@ -51,7 +48,7 @@ const AjaxToastBootStrap = {
       headerBgVariant: "success",
       bodyClass: ["p-3"],
       hideFooter: true,
-      headerTextVariant: "light"
+      headerTextVariant: "light",
     };
     for (const i in conf) {
       confDefault[i] = conf[i];
@@ -63,20 +60,20 @@ const AjaxToastBootStrap = {
       title: ajaxTitle,
       variant: variant,
       solid: true,
-      toaster: "b-toaster-top-right"
+      toaster: "b-toaster-top-right",
     });
   },
   post: function(url, datas, configs, showNotification = true) {
     return new Promise((resolv, reject) => {
       ajax
         .post(url, datas, configs)
-        .then(reponse => {
+        .then((reponse) => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch(error => {
+        .catch((error) => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
@@ -87,13 +84,13 @@ const AjaxToastBootStrap = {
     return new Promise((resolv, reject) => {
       ajax
         .get(url, configs)
-        .then(reponse => {
+        .then((reponse) => {
           if (showNotification) {
             this.notification("success");
           }
           resolv(reponse);
         })
-        .catch(error => {
+        .catch((error) => {
           //console.log("error : ", error);
           this.notification(this.GetErrorTitle(error), "warning");
           reject(error);
@@ -120,7 +117,7 @@ const AjaxToastBootStrap = {
       title = decodeURI(error.error.statusText);
     }
     return title;
-  }
+  },
 };
 /**
  * Intercept la reponse ajax pour declenche le toast adapter.

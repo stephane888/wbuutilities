@@ -1,6 +1,6 @@
 {
   "name": "wbuutilities",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,10 +9,7 @@
     "build-library": "vue-cli-service build --target lib --name vue-hello-world-simple ./src/install.js"
   },
   "main": "index.js",
-  "files": [
-    "src",
-    "dist"
-  ],
+  "files": [],
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.21.2",

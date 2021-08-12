@@ -9,16 +9,26 @@ const InstAxios = axios.create({
 
 const basicRequest = {
   axiosInstance: InstAxios,
+  /**
+   * Domaine permettant d'effectuer les tests en local.
+   */
   TestDomain: null,
-  BaseUrl:
-    (window.location.host.includes("localhost") ||
-      window.location.host.includes(".kksa")) &&
-    this.TestDomain
-      ? this.TestDomain
-      : window.location.protocol + "//" + window.location.host,
+  /**
+   * Permet de determiner, si nous sommes en local ou pas.
+   */
+  isLocalDev:
+    window.location.host.includes("localhost") ||
+    window.location.host.includes(".kksa")
+      ? true
+      : false,
+  BaseUrl() {
+    return this.isLocalDev && this.TestDomain
+      ? this.TestDomain.trim("/")
+      : window.location.protocol + "//" + window.location.host;
+  },
   post: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
-      const urlFinal = url.includes("://") ? url : this.BaseUrl + url;
+      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -34,8 +44,9 @@ const basicRequest = {
     });
   },
   get: function(url, configs) {
+    alert(" :: " + this.TestDomain);
     return new Promise((resolv, reject) => {
-      const urlFinal = url.includes("://") ? url : this.BaseUrl + url;
+      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -71,7 +82,7 @@ const basicRequest = {
           }),
           cache: "default",
         };
-        const urlFinal = url.includes("://") ? url : this.BaseUrl + url;
+        const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
         fetch(urlFinal, myInit).then(function(response) {
           response
             .json()

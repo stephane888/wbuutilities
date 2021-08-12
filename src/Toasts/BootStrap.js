@@ -63,7 +63,7 @@ const AjaxToastBootStrap = {
       toaster: "b-toaster-top-right",
     });
   },
-  post: function(url, datas, configs, showNotification = true) {
+  bPost: function(url, datas, configs, showNotification = true) {
     return new Promise((resolv, reject) => {
       this.ajax
         .post(url, datas, configs)
@@ -80,7 +80,7 @@ const AjaxToastBootStrap = {
         });
     });
   },
-  get(url, configs, showNotification = false) {
+  bGet(url, configs, showNotification = false) {
     alert(this.TestDomain);
     return new Promise((resolv, reject) => {
       this.get(url, configs)

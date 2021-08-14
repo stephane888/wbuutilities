@@ -65,8 +65,7 @@ const AjaxToastBootStrap = {
   },
   bPost: function(url, datas, configs, showNotification = true) {
     return new Promise((resolv, reject) => {
-      this.ajax
-        .post(url, datas, configs)
+      this.post(url, datas, configs)
         .then((reponse) => {
           if (showNotification) {
             this.notification("success");
@@ -81,7 +80,6 @@ const AjaxToastBootStrap = {
     });
   },
   bGet(url, configs, showNotification = false) {
-    alert(this.TestDomain);
     return new Promise((resolv, reject) => {
       this.get(url, configs)
         .then((reponse) => {

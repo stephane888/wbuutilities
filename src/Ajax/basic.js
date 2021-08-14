@@ -44,7 +44,6 @@ const basicRequest = {
     });
   },
   get: function(url, configs) {
-    alert(" :: " + this.TestDomain);
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
       InstAxios.get(urlFinal, configs)

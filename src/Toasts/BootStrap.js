@@ -31,7 +31,7 @@ const AjaxToastBootStrap = {
           reject(err);
         });
     });
-  }
+  },
   modalConfirmDelete(
     body = "Confirmer la suppression, NB : cette action est irreverssible.",
     conf = {

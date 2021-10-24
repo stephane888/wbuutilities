@@ -19,17 +19,19 @@ const AjaxToastBootStrap = {
       confDefault[i] = conf[i];
     }
     return new Promise((resolv, reject) => {
-      console.log("confDefault : ", confDefault);
       this.$bvModal
         .msgBoxConfirm(body, confDefault)
         .then((value) => {
-          resolv(value);
+          if(value)
+            resolv(value);
+          else
+            reject(value);
         })
         .catch((err) => {
           reject(err);
         });
     });
-  },
+  }
   modalConfirmDelete(
     body = "Confirmer la suppression, NB : cette action est irreverssible.",
     conf = {

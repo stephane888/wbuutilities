@@ -9,6 +9,11 @@
     "build-library": "vue-cli-service build --target lib --name vue-hello-world-simple ./src/install.js"
   },
   "main": "index.js",
+  "homepage": "https://github.com/stephane888/wbuutilities",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephane888/wbuutilities.git"
+  },
   "files": [
     "src"
   ],

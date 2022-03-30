@@ -1,7 +1,7 @@
 {
   "name": "wbuutilities",
   "version": "0.1.8",
-  "private": false,
+  "author": "stephane888",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

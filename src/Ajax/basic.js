@@ -4,10 +4,19 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 300000,
+  timeout: 300000
 });
 
+var formatBasicAuth = function(userName, password) {
+  var basicAuthCredential = userName + ":" + password;
+  var bace64 = btoa(basicAuthCredential);
+  return "Basic " + bace64;
+};
+var user = JSON.parse(window.localStorage.getItem("user"));
+
 const basicRequest = {
+  /* permet de lire la variable user dans le localstorage et de formater l'authorisation */
+  auth: formatBasicAuth(user.username, user.password),
   axiosInstance: InstAxios,
   /**
    * Domaine permettant d'effectuer les tests en local.
@@ -38,7 +47,7 @@ const basicRequest = {
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack,
+            stack: error.stack
           });
         });
     });
@@ -55,7 +64,7 @@ const basicRequest = {
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack,
+            stack: error.stack
           });
         });
     });
@@ -77,9 +86,9 @@ const basicRequest = {
             upload: fileEncode.base64,
             filename: fileCompose[0],
             ext: fileCompose[1],
-            id: id,
+            id: id
           }),
-          cache: "default",
+          cache: "default"
         };
         const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
         fetch(urlFinal, myInit).then(function(response) {
@@ -106,7 +115,7 @@ const basicRequest = {
       };
       reader.onerror = (error) => reject(error);
     });
-  },
+  }
 };
 
 export default basicRequest;

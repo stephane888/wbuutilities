@@ -13,10 +13,24 @@ var formatBasicAuth = function(userName, password) {
   return "Basic " + bace64;
 };
 var user = JSON.parse(window.localStorage.getItem("user"));
+var current_user;
+if (!user) {
+  user = {
+    username: "",
+    password: ""
+  };
+}
+
+if (window.localStorage.getItem("current_user")) {
+  current_user = JSON.parse(window.localStorage.getItem("current_user"));
+} else {
+  current_user = null;
+}
 
 const basicRequest = {
   /* permet de lire la variable user dans le localstorage et de formater l'authorisation */
   auth: formatBasicAuth(user.username, user.password),
+  current_user: current_user,
   axiosInstance: InstAxios,
   /**
    * Domaine permettant d'effectuer les tests en local.
@@ -39,6 +53,24 @@ const basicRequest = {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
+        .then((reponse) => {
+          resolv({ status: true, data: reponse.data, reponse: reponse });
+        })
+        .catch((error) => {
+          reject({
+            status: false,
+            error: error.response,
+            code: error.code,
+            stack: error.stack
+          });
+        });
+    });
+  },
+  delete: function(url, datas, configs) {
+    return new Promise((resolv, reject) => {
+      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
+      console.log("config", datas, configs);
+      InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
         })

@@ -14,12 +14,12 @@ var formatBasicAuth = function(userName, password) {
 };
 var user = JSON.parse(window.localStorage.getItem("user"));
 var current_user;
-if (!user) {
-  user = {
-    username: "",
-    password: ""
-  };
-}
+// if (!user) {
+//   user = {
+//     username: "",
+//     password: ""
+//   };
+// }
 
 if (window.localStorage.getItem("current_user")) {
   current_user = JSON.parse(window.localStorage.getItem("current_user"));
@@ -29,7 +29,7 @@ if (window.localStorage.getItem("current_user")) {
 
 const basicRequest = {
   /* permet de lire la variable user dans le localstorage et de formater l'authorisation */
-  auth: formatBasicAuth(user.username, user.password),
+  auth: user ? formatBasicAuth(user.username, user.password) : null,
   current_user: current_user,
   axiosInstance: InstAxios,
   /**

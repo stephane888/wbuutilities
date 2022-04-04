@@ -4,7 +4,7 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 300000
+  timeout: 300000,
 });
 
 var formatBasicAuth = function(userName, password) {
@@ -28,30 +28,48 @@ if (window.localStorage.getItem("current_user")) {
 }
 
 const basicRequest = {
-  /* permet de lire la variable user dans le localstorage et de formater l'authorisation */
+  /* Permet de lire la variable user dans le localstorage et de formater l'authorisation */
   auth: user ? formatBasicAuth(user.username, user.password) : null,
   current_user: current_user,
   axiosInstance: InstAxios,
   /**
    * Domaine permettant d'effectuer les tests en local.
+   * C'est sur ce domaine que les requetes vont etre transmise quand on est en local.
+   * @public
    */
   TestDomain: null,
   /**
+   * Permet de specifier un domaine pour la production. ( utiliser uniquement quand l'application front est sur un domaine different de l'application serveur ).
+   */
+  baseUrl: null,
+  /**
    * Permet de determiner, si nous sommes en local ou pas.
+   * @public
+   * @returns Booleans
    */
   isLocalDev:
     window.location.host.includes("localhost") ||
     window.location.host.includes(".kksa")
       ? true
       : false,
-  BaseUrl() {
-    return this.isLocalDev && this.TestDomain
-      ? this.TestDomain.trim("/")
-      : window.location.protocol + "//" + window.location.host;
+  /**
+   * Permet de derminer la source du domaine, en function des paramettres definit.
+   * @private (ne doit pas etre surcharger).
+   * @returns String
+   */
+  getBaseUrl() {
+    if (this.baseUrl)
+      return this.isLocalDev && this.TestDomain
+        ? this.TestDomain.trim("/")
+        : this.baseUrl;
+    else
+      return this.isLocalDev && this.TestDomain
+        ? this.TestDomain.trim("/")
+        : window.location.protocol + "//" + window.location.host;
   },
   post: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
-      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
+      const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -61,14 +79,14 @@ const basicRequest = {
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
           });
         });
     });
   },
   delete: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
-      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
+      const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       console.log("config", datas, configs);
       InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
@@ -79,14 +97,14 @@ const basicRequest = {
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
           });
         });
     });
   },
   get: function(url, configs) {
     return new Promise((resolv, reject) => {
-      const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
+      const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -96,7 +114,7 @@ const basicRequest = {
             status: false,
             error: error.response,
             code: error.code,
-            stack: error.stack
+            stack: error.stack,
           });
         });
     });
@@ -118,11 +136,11 @@ const basicRequest = {
             upload: fileEncode.base64,
             filename: fileCompose[0],
             ext: fileCompose[1],
-            id: id
+            id: id,
           }),
-          cache: "default"
+          cache: "default",
         };
-        const urlFinal = url.includes("://") ? url : this.BaseUrl() + url;
+        const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
         fetch(urlFinal, myInit).then(function(response) {
           response
             .json()
@@ -147,7 +165,7 @@ const basicRequest = {
       };
       reader.onerror = (error) => reject(error);
     });
-  }
+  },
 };
 
 export default basicRequest;

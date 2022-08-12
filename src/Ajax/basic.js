@@ -43,6 +43,11 @@ const basicRequest = {
    */
   baseUrl: null,
   /**
+   * Utiliser si le module supporte la traduction
+   * example : fr, en, ar ...
+   */
+  languageId: null,
+  /**
    * Permet de determiner, si nous sommes en local ou pas.
    * @public
    * @returns Booleans
@@ -69,6 +74,13 @@ const basicRequest = {
   },
   post: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
+      if (
+        this.languageId !== "" &&
+        this.languageId !== undefined &&
+        this.languageId !== null
+      )
+        url = "/" + this.languageId + url;
+
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
@@ -87,7 +99,7 @@ const basicRequest = {
   delete: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-      console.log("config", datas, configs);
+
       InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -104,7 +116,14 @@ const basicRequest = {
   },
   get: function(url, configs) {
     return new Promise((resolv, reject) => {
+      if (
+        this.languageId !== "" &&
+        this.languageId !== undefined &&
+        this.languageId !== null
+      )
+        url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });
@@ -126,16 +145,16 @@ const basicRequest = {
     return new Promise((resolv, reject) => {
       this.getBase64(file).then((fileEncode) => {
         var headers = new Headers();
-        console.log("headers : ", headers);
+
         var fileCompose = file.name.split(".");
         var myInit = {
           method: "POST",
           headers: headers,
-          //mode: "cors",
+          // mode: "cors",
           body: JSON.stringify({
             upload: fileEncode.base64,
-            filename: fileCompose[0],
-            ext: fileCompose[1],
+            ext: fileCompose.pop(),
+            filename: fileCompose.join("."),
             id: id,
           }),
           cache: "default",

@@ -52,11 +52,10 @@ const basicRequest = {
    * @public
    * @returns Booleans
    */
-  isLocalDev:
-    window.location.host.includes("localhost") ||
-    window.location.host.includes(".kksa")
-      ? true
-      : false,
+  isLocalDev: window.location.host.includes("localhost")
+    ? // || window.location.host.includes(".kksa")
+      true
+    : false,
   /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
@@ -123,7 +122,7 @@ const basicRequest = {
       )
         url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-
+      // console.log(" this.isLocalDev: ", this.isLocalDev );
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           resolv({ status: true, data: reponse.data, reponse: reponse });

@@ -4,7 +4,7 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 300000,
+  timeout: 300000
 });
 
 var formatBasicAuth = function(userName, password) {
@@ -52,10 +52,11 @@ const basicRequest = {
    * @public
    * @returns Booleans
    */
-  isLocalDev: window.location.host.includes("localhost")
-    ? // || window.location.host.includes(".kksa")
-      true
-    : false,
+  isLocalDev:
+    window.location.host.includes("localhost") ||
+    window.location.host.includes(".kksa")
+      ? true
+      : false,
   /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
@@ -71,6 +72,23 @@ const basicRequest = {
         ? this.TestDomain.trim("/")
         : window.location.protocol + "//" + window.location.host;
   },
+  getStatusText(er, type = false) {
+    
+    if (type) {
+      if (er) {
+        if (er.headers.customstatustext) {
+        return er.headers.customstatustext
+      }
+    }
+    return er.statusText
+    } else { 
+        if (er.response.headers.customstatustext) {
+        return er.response.headers.customstatustext
+      
+    }
+    return er.response.statusText
+    }
+  },
   post: function(url, datas, configs) {
     return new Promise((resolv, reject) => {
       if (
@@ -83,14 +101,21 @@ const basicRequest = {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
-          resolv({ status: true, data: reponse.data, reponse: reponse });
+          resolv({
+            status: true,
+            data: reponse.data,
+            reponse: reponse,
+            statusText: this.getStatusText(reponse,true)
+          });
         })
         .catch((error) => {
+          console.log('error wbutilities',error.response )
           reject({
             status: false,
             error: error.response,
             code: error.code,
             stack: error.stack,
+            statusText:this.getStatusText(error)
           });
         });
     });
@@ -101,7 +126,12 @@ const basicRequest = {
 
       InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
-          resolv({ status: true, data: reponse.data, reponse: reponse });
+          resolv({
+            status: true,
+            data: reponse.data,
+            reponse: reponse,
+            statusText: this.getStatusText(reponse,true)
+          });
         })
         .catch((error) => {
           reject({
@@ -109,6 +139,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
+            statusText: this.getStatusText(error)
           });
         });
     });
@@ -122,10 +153,15 @@ const basicRequest = {
       )
         url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-      // console.log(" this.isLocalDev: ", this.isLocalDev );
+
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
-          resolv({ status: true, data: reponse.data, reponse: reponse });
+          resolv({
+            status: true,
+            data: reponse.data,
+            reponse: reponse,
+             statusText: this.getStatusText(reponse,true)
+          });
         })
         .catch((error) => {
           reject({
@@ -133,6 +169,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
+            statusText:this.getStatusText(error)
           });
         });
     });
@@ -154,9 +191,9 @@ const basicRequest = {
             upload: fileEncode.base64,
             ext: fileCompose.pop(),
             filename: fileCompose.join("."),
-            id: id,
+            id: id
           }),
-          cache: "default",
+          cache: "default"
         };
         const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
         fetch(urlFinal, myInit).then(function(response) {
@@ -183,7 +220,7 @@ const basicRequest = {
       };
       reader.onerror = (error) => reject(error);
     });
-  },
+  }
 };
 
 export default basicRequest;

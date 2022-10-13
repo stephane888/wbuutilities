@@ -73,20 +73,32 @@ const basicRequest = {
         : window.location.protocol + "//" + window.location.host;
   },
   getStatusText(er, type = false) {
-    
-    if (type) {
-      if (er) {
-        if (er.headers.customstatustext) {
-        return er.headers.customstatustext
+    if (er) {
+      if (type) {
+        if (er) {
+          if (er.response && er.headers.customstatustext) {
+            return er.headers.customstatustext;
+          }
+        } else if (er.statusText) {
+          return er.statusText;
+        } else {
+          return null;
+        }
+      } else {
+        if (
+          er.response &&
+          er.response.headers &&
+          er.response.headers.customstatustext
+        ) {
+          return er.response.headers.customstatustext;
+        } else if (er.response && er.response.statusText) {
+          return er.response.statusText;
+        } else {
+          return null;
+        }
       }
-    }
-    return er.statusText
-    } else { 
-        if (er.response.headers.customstatustext) {
-        return er.response.headers.customstatustext
-      
-    }
-    return er.response.statusText
+    } else {
+      return null;
     }
   },
   post: function(url, datas, configs) {
@@ -105,17 +117,17 @@ const basicRequest = {
             status: true,
             data: reponse.data,
             reponse: reponse,
-            statusText: this.getStatusText(reponse,true)
+            statusText: this.getStatusText(reponse, true)
           });
         })
         .catch((error) => {
-          console.log('error wbutilities',error.response )
+          console.log("error wbutilities", error.response);
           reject({
             status: false,
             error: error.response,
             code: error.code,
             stack: error.stack,
-            statusText:this.getStatusText(error)
+            statusText: this.getStatusText(error)
           });
         });
     });
@@ -130,7 +142,7 @@ const basicRequest = {
             status: true,
             data: reponse.data,
             reponse: reponse,
-            statusText: this.getStatusText(reponse,true)
+            statusText: this.getStatusText(reponse, true)
           });
         })
         .catch((error) => {
@@ -160,7 +172,7 @@ const basicRequest = {
             status: true,
             data: reponse.data,
             reponse: reponse,
-             statusText: this.getStatusText(reponse,true)
+            statusText: this.getStatusText(reponse, true)
           });
         })
         .catch((error) => {
@@ -169,7 +181,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
-            statusText:this.getStatusText(error)
+            statusText: this.getStatusText(error)
           });
         });
     });

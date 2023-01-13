@@ -22,10 +22,8 @@ const AjaxToastBootStrap = {
       this.$bvModal
         .msgBoxConfirm(body, confDefault)
         .then((value) => {
-          if(value)
-            resolv(value);
-          else
-            reject(value);
+          if (value) resolv(value);
+          else reject(value);
         })
         .catch((err) => {
           reject(err);
@@ -65,7 +63,7 @@ const AjaxToastBootStrap = {
       toaster: "b-toaster-top-right",
     });
   },
-  bPost: function(url, datas, configs, showNotification = true) {
+  bPost: function(url, datas, configs, showNotification = false) {
     return new Promise((resolv, reject) => {
       this.post(url, datas, configs)
         .then((reponse) => {

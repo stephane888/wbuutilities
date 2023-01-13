@@ -4,7 +4,27 @@
  */
 import axios from "axios";
 const InstAxios = axios.create({
-  timeout: 300000
+  timeout: 300000,
+});
+// Surcharge des données d'envoit
+InstAxios.interceptors.request.use((config) => {
+  //Recuperation du temps de debut.
+  config.headers["request-startTime"] = new Date().getTime();
+  //
+  return config;
+});
+//surcharge de la reponse
+InstAxios.interceptors.response.use((response) => {
+  // Calcul de la durée
+  const currentTime = new Date().getTime();
+  const startTime = response.config.headers["request-startTime"];
+  let duree = currentTime - startTime;
+  if (duree) {
+    duree = duree / 1000;
+  }
+  response.headers["request-duration"] = duree;
+  //
+  return response;
 });
 
 var formatBasicAuth = function(userName, password) {
@@ -12,20 +32,19 @@ var formatBasicAuth = function(userName, password) {
   var bace64 = btoa(basicAuthCredential);
   return "Basic " + bace64;
 };
+/**
+ * Cette approche doit etre mise en place dans un enviroment securée et n'est pas recommander, car une tiere personne peut recuperer les données.
+ * On mettre en place un systeme d'authentification qui utilise les jetons pour maintenir les communications.
+ */
+////******* */
 var user = JSON.parse(window.localStorage.getItem("user"));
 var current_user;
-// if (!user) {
-//   user = {
-//     username: "",
-//     password: ""
-//   };
-// }
-
 if (window.localStorage.getItem("current_user")) {
   current_user = JSON.parse(window.localStorage.getItem("current_user"));
 } else {
   current_user = null;
 }
+////******* */
 
 const basicRequest = {
   /* Permet de lire la variable user dans le localstorage et de formater l'authorisation */
@@ -47,6 +66,10 @@ const basicRequest = {
    * example : fr, en, ar ...
    */
   languageId: null,
+  /**
+   * Permet d'afficher la console la les données envoyé et le retour de chaque requete.
+   */
+  debug: false,
   /**
    * Permet de determiner, si nous sommes en local ou pas.
    * @public
@@ -113,11 +136,25 @@ const basicRequest = {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
+          if (this.debug)
+            console.log(
+              "Debug axio : \n",
+              urlFinal,
+              "\n payload: ",
+              datas,
+              "\n config: ",
+              configs,
+              "\n Duration : ",
+              reponse.headers["request-duration"],
+              "\n reponse: ",
+              reponse,
+              "\n ------ \n"
+            );
           resolv({
             status: true,
             data: reponse.data,
             reponse: reponse,
-            statusText: this.getStatusText(reponse, true)
+            statusText: this.getStatusText(reponse, true),
           });
         })
         .catch((error) => {
@@ -127,7 +164,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
-            statusText: this.getStatusText(error)
+            statusText: this.getStatusText(error),
           });
         });
     });
@@ -142,7 +179,7 @@ const basicRequest = {
             status: true,
             data: reponse.data,
             reponse: reponse,
-            statusText: this.getStatusText(reponse, true)
+            statusText: this.getStatusText(reponse, true),
           });
         })
         .catch((error) => {
@@ -151,7 +188,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
-            statusText: this.getStatusText(error)
+            statusText: this.getStatusText(error),
           });
         });
     });
@@ -168,11 +205,23 @@ const basicRequest = {
 
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
+          if (this.debug)
+            console.log(
+              "Debug axio : \n",
+              urlFinal,
+              "\n Config: ",
+              configs,
+              "\n Duration : ",
+              reponse.headers["request-duration"],
+              "\n Reponse: ",
+              reponse,
+              "\n ------ \n"
+            );
           resolv({
             status: true,
             data: reponse.data,
             reponse: reponse,
-            statusText: this.getStatusText(reponse, true)
+            statusText: this.getStatusText(reponse, true),
           });
         })
         .catch((error) => {
@@ -181,7 +230,7 @@ const basicRequest = {
             error: error.response,
             code: error.code,
             stack: error.stack,
-            statusText: this.getStatusText(error)
+            statusText: this.getStatusText(error),
           });
         });
     });
@@ -203,9 +252,9 @@ const basicRequest = {
             upload: fileEncode.base64,
             ext: fileCompose.pop(),
             filename: fileCompose.join("."),
-            id: id
+            id: id,
           }),
-          cache: "default"
+          cache: "default",
         };
         const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
         fetch(urlFinal, myInit).then(function(response) {
@@ -232,7 +281,7 @@ const basicRequest = {
       };
       reader.onerror = (error) => reject(error);
     });
-  }
+  },
 };
 
 export default basicRequest;

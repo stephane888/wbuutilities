@@ -19,3 +19,4 @@ if (typeof window !== "undefined" && window.Vue) {
 export { ButtonSave, ButtonDelete };
 export { default as AjaxBasic } from "./src/Ajax/basic.js";
 export { default as AjaxToastBootStrap } from "./src/Toasts/BootStrap.js";
+export { default as entityLoad } from "./src/DrupalJsonApi/entityLoad.js";

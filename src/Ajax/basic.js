@@ -95,6 +95,13 @@ const basicRequest = {
         ? this.TestDomain.trim("/")
         : window.location.protocol + "//" + window.location.host;
   },
+  /**
+   * Permet de recuperer les messages , en priorité celui definie dans headers.customstatustext.
+   *
+   * @param {*} er
+   * @param {*} type ( vrai pour recuperer les messages en cas de success )
+   * @returns
+   */
   getStatusText(er, type = false) {
     if (er) {
       if (type) {
@@ -242,7 +249,6 @@ const basicRequest = {
     return new Promise((resolv, reject) => {
       this.getBase64(file).then((fileEncode) => {
         var headers = new Headers();
-
         var fileCompose = file.name.split(".");
         var myInit = {
           method: "POST",

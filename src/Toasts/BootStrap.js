@@ -22,8 +22,8 @@ const AjaxToastBootStrap = {
       this.$bvModal
         .msgBoxConfirm(body, confDefault)
         .then((value) => {
-          if (value) resolv(value);
-          else reject(value);
+          console.log("value : ", value);
+          resolv(value);
         })
         .catch((err) => {
           reject(err);
@@ -32,14 +32,20 @@ const AjaxToastBootStrap = {
   },
   modalConfirmDelete(
     body = "Confirmer la suppression, NB : cette action est irreverssible.",
-    conf = {
+    newConf = {}
+  ) {
+    const conf = {
       title: "Attention",
       okVariant: "danger",
       okTitle: "Supprimer",
       cancelTitle: "Annuler",
       footerClass: "p-2",
+      headerBgVariant: "danger",
+      headerTextVariant: "light",
+    };
+    for (const i in newConf) {
+      conf[i] = newConf[i];
     }
-  ) {
     return this.modalMessage(body, conf);
   },
   modalSuccess(body = "", conf = {}) {

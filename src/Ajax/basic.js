@@ -27,7 +27,7 @@ InstAxios.interceptors.response.use((response) => {
   return response;
 });
 
-var formatBasicAuth = function(userName, password) {
+var formatBasicAuth = function (userName, password) {
   var basicAuthCredential = userName + ":" + password;
   var bace64 = btoa(basicAuthCredential);
   return "Basic " + bace64;
@@ -131,7 +131,7 @@ const basicRequest = {
       return null;
     }
   },
-  post: function(url, datas, configs) {
+  post(url, datas, configs) {
     return new Promise((resolv, reject) => {
       if (
         this.languageId !== "" &&
@@ -176,7 +176,7 @@ const basicRequest = {
         });
     });
   },
-  delete: function(url, datas, configs) {
+  delete(url, datas, configs) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
 
@@ -200,7 +200,7 @@ const basicRequest = {
         });
     });
   },
-  get: function(url, configs) {
+  get(url, configs) {
     return new Promise((resolv, reject) => {
       if (
         this.languageId !== "" &&
@@ -263,10 +263,10 @@ const basicRequest = {
           cache: "default",
         };
         const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-        fetch(urlFinal, myInit).then(function(response) {
+        fetch(urlFinal, myInit).then(function (response) {
           response
             .json()
-            .then(function(json) {
+            .then(function (json) {
               resolv(json);
             })
             .catch((error) => {

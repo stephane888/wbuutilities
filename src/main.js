@@ -1,8 +1,10 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
-
-Vue.config.productionTip = false;
-
-new Vue({
-  render: h => h(App)
-}).$mount("#app");
+// create App
+const AppInstance = createApp(App);
+// add config.
+AppInstance.config.errorHandler = (err) => {
+  console.log("AppInstance : ", err);
+};
+// mount app
+AppInstance.mount("#app");

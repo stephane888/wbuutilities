@@ -99,7 +99,7 @@ const basicRequest = {
    * Permet de recuperer les messages , en priorité celui definie dans headers.customstatustext.
    *
    * @param {*} er
-   * @param {*} type ( vrai pour recuperer les messages en cas de success )
+   * @param {*} type ( true pour recuperer les messages en cas de success )
    * @returns
    */
   getStatusText(er, type = false) {
@@ -114,17 +114,23 @@ const basicRequest = {
         } else {
           return null;
         }
-      } else {
+      }
+      // get message error
+      else {
+        const message =
+          er.response && er.response.data && er.response.data.message
+            ? " || " + er.response.data.message
+            : null;
         if (
           er.response &&
           er.response.headers &&
           er.response.headers.customstatustext
         ) {
-          return er.response.headers.customstatustext;
+          return er.response.headers.customstatustext + message;
         } else if (er.response && er.response.statusText) {
-          return er.response.statusText;
+          return er.response.statusText + message;
         } else {
-          return null;
+          return message;
         }
       }
     } else {
@@ -232,6 +238,7 @@ const basicRequest = {
           });
         })
         .catch((error) => {
+          console.log("error wbutilities", error.response);
           reject({
             status: false,
             error: error.response,

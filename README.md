@@ -16,7 +16,7 @@ npm install /{path-to-module}/wbuutilities
 Le protocole réseau <a href="https://fr.wikipedia.org/wiki/Hypertext_Transfer_Protocol/2">HTTP/2</a> ne supporte pas les messages personnalisés, dans ce cas, vous devez utiliser l'entete "customStatusText". Nous recommendons cela pour les nouvelles applications car <a href="https://fr.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP/1</a> est de moins à mons utiliser.
 Nous distinguons plusieurs cas d'utilisation en fonction des besoins.
 
-#### Utilisation basique.
+#### Utilisation de base.
 
 Dans ce environement, nous disposons de 4 methodes :
 

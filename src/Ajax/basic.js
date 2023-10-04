@@ -75,25 +75,15 @@ const basicRequest = {
    * @public
    * @returns Booleans
    */
-  isLocalDev:
-    window.location.host.includes("localhost") ||
-    window.location.host.includes(".kksa")
-      ? true
-      : false,
+  isLocalDev: window.location.host.includes("localhost") || window.location.host.includes(".kksa") ? true : false,
   /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
    * @returns String
    */
   getBaseUrl() {
-    if (this.baseUrl)
-      return this.isLocalDev && this.TestDomain
-        ? this.TestDomain.trim("/")
-        : this.baseUrl;
-    else
-      return this.isLocalDev && this.TestDomain
-        ? this.TestDomain.trim("/")
-        : window.location.protocol + "//" + window.location.host;
+    if (this.baseUrl) return this.isLocalDev && this.TestDomain ? this.TestDomain.trim("/") : this.baseUrl;
+    else return this.isLocalDev && this.TestDomain ? this.TestDomain.trim("/") : window.location.protocol + "//" + window.location.host;
   },
   /**
    * Permet de recuperer les messages , en priorité celui definie dans headers.customstatustext.
@@ -117,15 +107,8 @@ const basicRequest = {
       }
       // get message error
       else {
-        const message =
-          er.response && er.response.data && er.response.data.message
-            ? " || " + er.response.data.message
-            : null;
-        if (
-          er.response &&
-          er.response.headers &&
-          er.response.headers.customstatustext
-        ) {
+        const message = er.response && er.response.data && er.response.data.message ? " || " + er.response.data.message : null;
+        if (er.response && er.response.headers && er.response.headers.customstatustext) {
           return er.response.headers.customstatustext + message;
         } else if (er.response && er.response.statusText) {
           return er.response.statusText + message;
@@ -139,12 +122,7 @@ const basicRequest = {
   },
   post(url, datas, configs) {
     return new Promise((resolv, reject) => {
-      if (
-        this.languageId !== "" &&
-        this.languageId !== undefined &&
-        this.languageId !== null
-      )
-        url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
@@ -208,28 +186,13 @@ const basicRequest = {
   },
   get(url, configs) {
     return new Promise((resolv, reject) => {
-      if (
-        this.languageId !== "" &&
-        this.languageId !== undefined &&
-        this.languageId !== null
-      )
-        url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
 
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           if (this.debug)
-            console.log(
-              "Debug axio : \n",
-              urlFinal,
-              "\n Config: ",
-              configs,
-              "\n Duration : ",
-              reponse.headers["request-duration"],
-              "\n Reponse: ",
-              reponse,
-              "\n ------ \n"
-            );
+            console.log("Debug axio : \n", urlFinal, "\n Config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n Reponse: ", reponse, "\n ------ \n");
           resolv({
             status: true,
             data: reponse.data,

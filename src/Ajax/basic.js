@@ -119,7 +119,7 @@ const basicRequest = {
   },
   post: function (url, datas, configs) {
     return new Promise((resolv, reject) => {
-      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)

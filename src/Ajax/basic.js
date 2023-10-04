@@ -27,7 +27,7 @@ InstAxios.interceptors.response.use((response) => {
   return response;
 });
 
-var formatBasicAuth = function(userName, password) {
+var formatBasicAuth = function (userName, password) {
   var basicAuthCredential = userName + ":" + password;
   var bace64 = btoa(basicAuthCredential);
   return "Basic " + bace64;
@@ -75,25 +75,15 @@ const basicRequest = {
    * @public
    * @returns Booleans
    */
-  isLocalDev:
-    window.location.host.includes("localhost") ||
-    window.location.host.includes(".kksa")
-      ? true
-      : false,
+  isLocalDev: window.location.host.includes("localhost") || window.location.host.includes(".kksa") ? true : false,
   /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
    * @returns String
    */
   getBaseUrl() {
-    if (this.baseUrl)
-      return this.isLocalDev && this.TestDomain
-        ? this.TestDomain.trim("/")
-        : this.baseUrl;
-    else
-      return this.isLocalDev && this.TestDomain
-        ? this.TestDomain.trim("/")
-        : window.location.protocol + "//" + window.location.host;
+    if (this.baseUrl) return this.isLocalDev && this.TestDomain ? this.TestDomain.trim("/") : this.baseUrl;
+    else return this.isLocalDev && this.TestDomain ? this.TestDomain.trim("/") : window.location.protocol + "//" + window.location.host;
   },
   /**
    * Permet de recuperer les messages , en priorité celui definie dans headers.customstatustext.
@@ -115,11 +105,7 @@ const basicRequest = {
           return null;
         }
       } else {
-        if (
-          er.response &&
-          er.response.headers &&
-          er.response.headers.customstatustext
-        ) {
+        if (er.response && er.response.headers && er.response.headers.customstatustext) {
           return er.response.headers.customstatustext;
         } else if (er.response && er.response.statusText) {
           return er.response.statusText;
@@ -131,14 +117,9 @@ const basicRequest = {
       return null;
     }
   },
-  post: function(url, datas, configs) {
+  post: function (url, datas, configs) {
     return new Promise((resolv, reject) => {
-      if (
-        this.languageId !== "" &&
-        this.languageId !== undefined &&
-        this.languageId !== null
-      )
-        url = "/" + this.languageId + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.post(urlFinal, datas, configs)
@@ -176,7 +157,7 @@ const basicRequest = {
         });
     });
   },
-  delete: function(url, datas, configs) {
+  delete: function (url, datas, configs) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
 
@@ -200,30 +181,15 @@ const basicRequest = {
         });
     });
   },
-  get: function(url, configs) {
+  get: function (url, configs) {
     return new Promise((resolv, reject) => {
-      if (
-        this.languageId !== "" &&
-        this.languageId !== undefined &&
-        this.languageId !== null
-      )
-        url = "/" + this.languageId + url;
-      const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
+      const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           if (this.debug)
-            console.log(
-              "Debug axio : \n",
-              urlFinal,
-              "\n Config: ",
-              configs,
-              "\n Duration : ",
-              reponse.headers["request-duration"],
-              "\n Reponse: ",
-              reponse,
-              "\n ------ \n"
-            );
+            console.log("Debug axio : \n", urlFinal, "\n Config: ", configs, "\n Duration : ", reponse.headers["request-duration"], "\n Reponse: ", reponse, "\n ------ \n");
           resolv({
             status: true,
             data: reponse.data,
@@ -263,10 +229,10 @@ const basicRequest = {
           cache: "default",
         };
         const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-        fetch(urlFinal, myInit).then(function(response) {
+        fetch(urlFinal, myInit).then(function (response) {
           response
             .json()
-            .then(function(json) {
+            .then(function (json) {
               resolv(json);
             })
             .catch((error) => {

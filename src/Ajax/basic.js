@@ -1,6 +1,10 @@
 /**
  * Permet d'effectuer les requetes
- * pour modifier ou definir les paramettres par defaut de l'instance, {AjaxBasic}.axiosInstance.defaults.timeout = 30000;
+ * pour modifier ou definir les paramettres par defaut de l'instance,
+ * 1- importer
+ * import { AjaxToastBootStrap } from "wbuutilities";
+ * 2- Surcharger ( par example la duree)
+ * AjaxToastBootStrap.axiosInstance.defaults.timeout = 1200000;
  */
 import axios from "axios";
 const InstAxios = axios.create({
@@ -13,7 +17,7 @@ InstAxios.interceptors.request.use((config) => {
   //
   return config;
 });
-//surcharge de la reponse
+// surcharge de la reponse
 InstAxios.interceptors.response.use((response) => {
   // Calcul de la durée
   const currentTime = new Date().getTime();
@@ -77,6 +81,11 @@ const basicRequest = {
    */
   isLocalDev: window.location.host.includes("localhost") || window.location.host.includes(".kksa") ? true : false,
   /**
+   * Permet d'ajouter les enttetes.
+   * {key:value}
+   */
+  customHeaders: {},
+  /**
    * Permet de derminer la source du domaine, en function des paramettres definit.
    * @private (ne doit pas etre surcharger).
    * @returns String
@@ -117,11 +126,12 @@ const basicRequest = {
       return null;
     }
   },
-  post: function (url, datas, configs) {
+  post: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeHeaders(configs);
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
           if (this.debug)
@@ -157,10 +167,10 @@ const basicRequest = {
         });
     });
   },
-  delete: function (url, datas, configs) {
+  delete: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-
+      configs = this.mergeHeaders(configs);
       InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
           resolv({
@@ -181,11 +191,12 @@ const basicRequest = {
         });
     });
   },
-  get: function (url, configs) {
+  get: function (url, configs = {}) {
     return new Promise((resolv, reject) => {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
+      configs = this.mergeHeaders(configs);
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           if (this.debug)
@@ -253,6 +264,24 @@ const basicRequest = {
       };
       reader.onerror = (error) => reject(error);
     });
+  },
+  /**
+   * Permet d'ajouter une configuration specifique
+   */
+  setHeaders(key, value) {
+    this.customHeaders[key] = value;
+  },
+  /**
+   * Permet d'additionner la configation
+   */
+  mergeHeaders(configs) {
+    if (!configs.headers) configs.headers = {};
+    if (this.customHeaders) {
+      for (const i in this.customHeaders) {
+        configs.headers[i] = this.customHeaders[i];
+      }
+    }
+    return configs;
   },
 };
 

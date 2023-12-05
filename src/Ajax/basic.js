@@ -131,7 +131,7 @@ const basicRequest = {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-      configs = this.mergeHeaders(configs);
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.post(urlFinal, datas, configs)
         .then((reponse) => {
           if (this.debug)
@@ -170,7 +170,7 @@ const basicRequest = {
   delete: function (url, datas, configs = {}) {
     return new Promise((resolv, reject) => {
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-      configs = this.mergeHeaders(configs);
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.delete(urlFinal, configs, datas)
         .then((reponse) => {
           resolv({
@@ -196,7 +196,7 @@ const basicRequest = {
       if (this.languageId !== "" && this.languageId !== undefined && this.languageId !== null && !url.includes("://")) url = "/" + this.languageId + url;
 
       const urlFinal = url.includes("://") ? url : this.getBaseUrl() + url;
-      configs = this.mergeHeaders(configs);
+      configs = this.mergeCustomHeaders(configs);
       InstAxios.get(urlFinal, configs)
         .then((reponse) => {
           if (this.debug)
@@ -274,7 +274,7 @@ const basicRequest = {
   /**
    * Permet d'additionner la configation
    */
-  mergeHeaders(configs) {
+  mergeCustomHeaders(configs) {
     if (!configs.headers) configs.headers = {};
     if (this.customHeaders) {
       for (const i in this.customHeaders) {

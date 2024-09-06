@@ -61,7 +61,7 @@ const AjaxToastBootStrap = {
     }
     return this.modalMessage(body, confDefault);
   },
-  notification: function(ajaxTitle, variant = "success") {
+  notification: function (ajaxTitle, variant = "success") {
     this.$bvToast.toast(" ", {
       title: ajaxTitle,
       variant: variant,
@@ -69,39 +69,38 @@ const AjaxToastBootStrap = {
       toaster: "b-toaster-top-right",
     });
   },
-  bPost: function(url, datas, configs, showNotification = false) {
+  bPost: function (url, datas, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.post(url, datas, configs)
         .then((reponse) => {
           if (showNotification) {
-            this.notification("success");
+            this.notification(successMessage);
           }
           resolv(reponse);
         })
         .catch((error) => {
           //console.log("error : ", error);
-          this.notification(this.GetErrorTitle(error), "warning");
+          this.notification(this.GetErrorTitle(error), failureMessage);
           reject(error);
         });
     });
   },
-  bGet(url, configs, showNotification = false) {
+  bGet(url, configs, showNotification = false, successMessage = "success", failureMessage = "warning") {
     return new Promise((resolv, reject) => {
       this.get(url, configs)
         .then((reponse) => {
           if (showNotification) {
-            this.notification("success");
+            this.notification(successMessage);
           }
           resolv(reponse);
         })
         .catch((error) => {
-          //console.log("error : ", error);
-          this.notification(this.GetErrorTitle(error), "warning");
+          this.notification(this.GetErrorTitle(error), failureMessage);
           reject(error);
         });
     });
   },
-  GetErrorTitle: function(error) {
+  GetErrorTitle: function (error) {
     var title;
     //
     if (error.code) {

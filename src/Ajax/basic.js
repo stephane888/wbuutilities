@@ -12,7 +12,7 @@ const InstAxios = axios.create({
 });
 // Surcharge des données d'envoit
 InstAxios.interceptors.request.use((config) => {
-  //Recuperation du temps de debut.
+  // Recuperation du temps de debut.
   config.headers["request-startTime"] = new Date().getTime();
   //
   return config;

@@ -1,6 +1,6 @@
 {
   "name": "wbuutilities",
-  "version": "2.0.0",
+  "version": "3.x",
   "author": "stephane888",
   "scripts": {
     "dev": "vite",
@@ -21,10 +21,6 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.2",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vue/eslint-config-prettier": "^8.0.0",
-    "eslint": "^8.45.0",
-    "eslint-plugin-vue": "^9.15.1",
-    "prettier": "^3.0.0",
     "vite": "^4.4.6"
   },
   "license": "MIT"
